@@ -2,13 +2,25 @@ const LikeDislike = require("../models/likeDislike");
 const Users = require("../models/users");
 
 module.exports = class LikeDislikeService {
+  async createLikeAndDislike(likeDislike) {
+    console.log(likeDislike, "likeDislike service");
+    const user = await LikeDislike.query().findOne({ user_id: likeDislike.user_id });
+    console.log(user, "user, service hai bhai");
+    if (user == undefined) {
+      return await LikeDislike.query().insertGraph(likeDislike);
+    }
+    return await LikeDislike.query()
+      .update({ user_id: likeDislike.user_id, like: likeDislike.like, dislike: likeDislike.dislike })
+      .where({ user_id: like.user_id });
+  }
+
   async createLike(like) {
     const user = await LikeDislike.query().findOne({ user_id: like.user_id });
     if (user == undefined) {
       return await LikeDislike.query().insertGraph(like);
     }
     return await LikeDislike.query()
-      .update({ user_id: like.user_id, dislike: "false", like: like.like })
+      .update({ user_id: like.user_id, dislike: false, like: like.like })
       .where({ user_id: like.user_id });
   }
 

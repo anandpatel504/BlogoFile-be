@@ -15,6 +15,9 @@ class Blogs extends (Model) {
                 title: { type: 'string' },
                 description: { type: 'string' },
                 author: { type: 'string' },
+                created_at: { type: "timestamp" },
+                updated_at: { type: "timestamp" },
+
             }
         }
     }

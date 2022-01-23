@@ -5,6 +5,22 @@ const Services = new LikeDislikeService();
 
 const { authenticateToken } = require('../auth/strategies/jwt');
 
+// do like&dislike
+router.post('/likeDislike', authenticateToken, async(req, res) => {
+    const userId = req.decode.id;
+    console.log(req.body, "req.body route data");
+    const like = req.body.like;
+    const userData = {
+        "user_id": userId,
+        "like": like,
+    }
+    await Services.createLikeAndDislike(req.body).then((data) => {
+        res.send({"success": "Thanks for like&dislike"});
+    }).catch ((err) => {
+        res.send(err);
+    })
+})
+
 // for like
 router.put('/like', authenticateToken, async(req, res) => {
     const userId = req.decode.id;
