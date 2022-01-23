@@ -1,4 +1,4 @@
-# BlogFile App
+# BlogoFile App
 
 #### I have created a blogofile app in which the user can register and login and after that, he can upload images (#image gallery), create the blog and view the blogs. and also he can like and dislike. For this app, I used Express, Mysql, Knex, and JWT for authentication:
 
