@@ -4,7 +4,7 @@ Model.knex(knex);
 
 class LikeDislike extends (Model) {
     static get tableName() {
-        return 'likeDislike'
+        return 'like_dislike'
     }
     static get jsonSchema() {
         return {
@@ -13,8 +13,11 @@ class LikeDislike extends (Model) {
             properties: {
                 id: { type: 'integer' },
                 user_id: { type: 'integer' },
-                like: { type: 'string' },
-                dislike: { type: 'string' },
+                like: { type: 'boolean' },
+                dislike: { type: 'boolean' },
+                created_at: { type: "timestamp" },
+                updated_at: { type: "timestamp" },
+
             }
         }
     }
@@ -26,7 +29,7 @@ class LikeDislike extends (Model) {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Users,
                 join: {
-                    from: 'likeDislike.user_id',
+                    from: 'like_dislike.user_id',
                     to: 'users.id'
                 }
             }

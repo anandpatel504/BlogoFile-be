@@ -3,7 +3,6 @@
 const Dotenv = require("dotenv");
 Dotenv.config({ path: `${__dirname}/.env` });
 const { DB_NAME, DB_USER, DB_PASS, DB_HOST, PORT } = process.env;
-console.log({ DB_NAME, DB_USER, DB_PASS, DB_HOST, PORT }, "hello env");
 
 module.exports = {
   development: {
