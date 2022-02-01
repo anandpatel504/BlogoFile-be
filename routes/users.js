@@ -28,27 +28,37 @@ router.get("/db", async (req, res) => {
 router.post("/signup", async (req, res) => {
   await Services.createUsers(req.body)
     .then((data) => {
-      res.send({ success: `${data.email} registered successfully!` });
+      const userInfo = Services.emailChecking(req.body.email);
+      const token = generateAccessToken(userInfo);
+      res.send({
+        "status": "success",
+        "token": token,
+        name: userInfo.name
+      });
     })
     .catch((err) => {
-      res.send(err);
+      res.send({
+        "status": "error",
+        "message": "This user alerady exists."
+      })
     });
 });
 
 // login user with JWT
 router.post("/login", async (req, res, next) => {
   const userInfo = await Services.emailChecking(req.body.email);
+  console.log(userInfo);
   if (userInfo) {
     const passCheck = await Services.PassChecking(userInfo, req.body.password);
     if (passCheck) {
       const token = generateAccessToken(userInfo);
       res.cookie("key", token);
-      res.send({ token: process.env.ACCESS_KEY + token });
+      res.send({status: 'success', token: token, name: userInfo.name });
     } else {
-      res.send({ sorry: "wrong password! 🤔" });
+      res.send({status: 'error', message: "wrong password! 🤔" });
     }
   } else {
-    res.send({ sorry: "This @email isn't exist! 😅" });
+    res.send({status: "error", message: "This @email isn't exist! 😅" });
   }
 });
 
