@@ -31,16 +31,16 @@ router.post("/signup", async (req, res) => {
       const userInfo = Services.emailChecking(req.body.email);
       const token = generateAccessToken(userInfo);
       res.send({
-        "status": "success",
-        "token": token,
-        name: userInfo.name
+        status: "success",
+        token: token,
+        name: userInfo.name,
       });
     })
     .catch((err) => {
       res.send({
-        "status": "error",
-        "message": "This user alerady exists."
-      })
+        status: "error",
+        message: "This user alerady exists.",
+      });
     });
 });
 
@@ -53,12 +53,12 @@ router.post("/login", async (req, res, next) => {
     if (passCheck) {
       const token = generateAccessToken(userInfo);
       res.cookie("key", token);
-      res.send({status: 'success', token: token, name: userInfo.name });
+      res.send({ status: "success", token: token, name: userInfo.name });
     } else {
-      res.send({status: 'error', message: "wrong password! 🤔" });
+      res.send({ status: "error", message: "wrong password! 🤔" });
     }
   } else {
-    res.send({status: "error", message: "This @email isn't exist! 😅" });
+    res.send({ status: "error", message: "This @email isn't exist! 😅" });
   }
 });
 

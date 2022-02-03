@@ -24,6 +24,7 @@
     "nodemon": "^2.0.6",
     "objection": "^2.2.3",
     "objection-unique": "^1.2.1",
-    "pg": "^8.7.1"
+    "pg": "^8.7.1",
+    "zomato": "^1.1.0"
   }
 }
