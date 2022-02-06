@@ -16,6 +16,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "http-errors": "^1.8.0",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.12",
     "knex-migrate": "^1.7.4",
@@ -23,8 +24,10 @@
     "mysql": "^2.18.1",
     "nodemon": "^2.0.6",
     "objection": "^2.2.3",
+    "objection-db-errors": "^1.1.2",
     "objection-unique": "^1.2.1",
     "pg": "^8.7.1",
+    "underscore": "^1.13.2",
     "zomato": "^1.1.0"
   }
 }

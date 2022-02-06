@@ -1,61 +1,38 @@
-const { Model } = require('objection');
-const knex = require('../config/dbConfig');
-Model.knex(knex);
+const Joi = require("joi");
+const { Model } = require("./helper/index");
 
-class LikeDislike extends (Model) {
-    static get tableName() {
-        return 'like_dislike'
-    }
-    static get jsonSchema() {
-        return {
-            type: 'object',
-            required: ['user_id'],
-            properties: {
-                id: { type: 'integer' },
-                user_id: { type: 'integer' },
-                like: { type: 'boolean' },
-                dislike: { type: 'boolean' },
-                created_at: { type: "timestamp" },
-                updated_at: { type: "timestamp" },
+module.exports = class LikeDislike extends Model {
+  static get tableName() {
+    return "like_dislike";
+  }
 
-            }
-        }
-    }
+  static get joiSchema() {
+    return Joi.object({
+      id: Joi.number().integer().greater(0),
+      user_id: Joi.number().required(),
+      like: Joi.boolean(),
+      dislike: Joi.boolean(),
+      created_at: Joi.date(),
+      updated_at: Joi.date(),
+    });
+  }
 
-    static get relationMappings() {
-        const Users = require('./users')
-        return {
-            users: {
-                relation: Model.BelongsToOneRelation,
-                modelClass: Users,
-                join: {
-                    from: 'like_dislike.user_id',
-                    to: 'users.id'
-                }
-            }
-        }
-    }
-}
+  static get relationMappings() {
+    const Users = require("./user");
+    return {
+      users: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Users,
+        join: {
+          from: "like_dislike.user_id",
+          to: "users.id",
+        },
+      },
+    };
+  }
 
-// class LikeDislike extends Model {
-//     static get tableName() {
-//       return 'likeDislike';
-//     }
-  
-//     static get relationMappings() {
-//         const Users = require('./users')
-//         return {
-//             users: {
-//                 relation: Model.BelongsToOneRelation,
-//                 modelClass: Users,
-//                 join: {
-//                     from: 'likeDislike.user_id',
-//                     to: 'users.id'
-//                 }
-//             }
-//         }
-//     }
-//   }
-  
-
-module.exports = LikeDislike;
+  $beforeInsert() {
+    const now = new Date();
+    this.created_at = now;
+  }
+};

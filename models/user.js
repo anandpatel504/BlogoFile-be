@@ -1,18 +1,20 @@
 const Joi = require("joi");
 const { Model } = require("./helper/index");
-module.exports = class Blogs extends Model {
+
+module.exports = class User extends Model {
   static get tableName() {
-    return "blogs";
+    return "users";
   }
 
   static get joiSchema() {
     return Joi.object({
       id: Joi.number().integer().greater(0),
-      title: Joi.string().required(),
-      description: Joi.string(),
-      author: Joi.string(),
+      name: Joi.string().required(),
+      email: Joi.string().required(),
+      password: Joi.string(),
+      profile_picture: Joi.string().uri(),
+      reset_link: Joi.string.uri(),
       created_at: Joi.date(),
-      updated_at: Joi.date(),
     });
   }
   $beforeInsert() {

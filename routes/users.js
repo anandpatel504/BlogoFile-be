@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const UserService = require("../services/users");
+const UserService = require("../services/user");
 const Services = new UserService();
 
 const { generateAccessToken } = require("../auth/strategies/jwt");
@@ -8,20 +8,6 @@ const { generateAccessToken } = require("../auth/strategies/jwt");
 // landing page
 router.get("/", (req, res) => {
   res.send({ success: "Welcome on the home page!" });
-});
-
-// /db route
-router.get("/db", async (req, res) => {
-  try {
-    const client = await pool.connect();
-    const result = await client.query("SELECT * FROM test_table");
-    const results = { results: result ? result.rows : null };
-    res.render("pages/db", results);
-    client.release();
-  } catch (err) {
-    console.error(err);
-    res.send("Error " + err);
-  }
 });
 
 // create users account
@@ -37,10 +23,7 @@ router.post("/signup", async (req, res) => {
       });
     })
     .catch((err) => {
-      res.send({
-        status: "error",
-        message: "This user alerady exists.",
-      });
+      res.send(err);
     });
 });
 
@@ -71,6 +54,7 @@ router.get("/users", async (req, res) => {
 // get user by id
 router.get("/user/:id", async (req, res) => {
   const userId = req.params.id;
+  console.log(userId, "userID");
   await Services.findById(userId)
     .then((data) => {
       res.send(data);
