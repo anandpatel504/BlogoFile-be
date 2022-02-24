@@ -16,6 +16,7 @@ router.get("/", (req, res) => {
 router.post("/signup", async (req, res) => {
   await Services.createUsers(req.body)
     .then((data) => {
+      console.log(data, "data");
       const userInfo = Services.emailChecking(req.body.email);
       const token = generateAccessToken(userInfo);
       res.send({
@@ -25,7 +26,10 @@ router.post("/signup", async (req, res) => {
       });
     })
     .catch((err) => {
-      res.send(err);
+      res.send({
+        status: "error",
+        message: "This user alerady exists.",
+      });
     });
 });
 
@@ -73,6 +77,7 @@ router.post("/forgot-password", async (req, res) => {
   try {
     // look for email in database
     const [user] = await Services.filterBy({ email });
+    console.log(user, "user hai");
     // if there is no user send back an error
     if (!user) {
       res.status(404).json({ error: "Invalid email" });
@@ -84,7 +89,7 @@ router.post("/forgot-password", async (req, res) => {
       // update resetLink property to be the temporary token and then send email
       await Services.update(user.id, { resetLink });
       await Services.sendEmail(user, resetLink);
-      res.status(200).json({ message: "Check your email" });
+      res.status(200).json({ message: "Check your email", user: user });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -128,7 +133,7 @@ router.patch("/reset-password/:token", async (req, res) => {
     };
 
     await Services.updatePassword(user.id, updatedCredentials);
-    res.status(200).json({ message: "Password updated" });
+    res.status(200).json({ message: "Password updated", user: user });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
