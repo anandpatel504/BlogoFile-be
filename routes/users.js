@@ -77,7 +77,6 @@ router.post("/forgot-password", async (req, res) => {
   try {
     // look for email in database
     const [user] = await Services.filterBy({ email });
-    console.log(user, "user hai");
     // if there is no user send back an error
     if (!user) {
       res.status(404).json({ error: "Invalid email" });
@@ -87,12 +86,14 @@ router.post("/forgot-password", async (req, res) => {
         expiresIn: "10m",
       });
       // update resetLink property to be the temporary token and then send email
-      // await Services.update(user.id, { resetLink });
+      await Services.update(user.id, { resetLink });
       await Services.sendEmail(user, resetLink);
-      res.status(200).json({status: 'success', message: "Check your email", user: user });
+      res
+        .status(200)
+        .json({ status: "success", message: "Check your email", user: user });
     }
   } catch (error) {
-    res.status(500).json({status: 'error', message: error.message });
+    res.status(500).json({ status: "error", message: error.message });
   }
 });
 
@@ -103,40 +104,45 @@ router.patch("/reset-password/:token", async (req, res) => {
   const newPassword = req.body;
 
   // if there is a token we need to decoded and check for no errors
-  if (resetLink) {
-    jwt.verify(resetLink, process.env.SECRET_KEY, (error, decodedToken) => {
-      if (error) {
-        res.status(401).json({ message: "Incorrect token or expired" });
+  jwt.verify(resetLink, process.env.SECRET_KEY, async (error, decodedToken) => {
+    if (error) {
+      return res
+        .status(401)
+        .json({ status: "error", message: "Your Liknk has been expired!" });
+    } else {
+      // try {
+      // find user by the temporary token we stored earlier
+      console.log("finding user....");
+      const [user] = await Services.filterBy({ resetLink });
+
+      // if there is no user, send back an error
+      console.log(user);
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "We could not find a match for this link" });
       }
-    });
-  }
 
-  try {
-    // find user by the temporary token we stored earlier
-    const [user] = await Services.filterBy({ resetLink });
+      // otherwise we need to hash the new password  before saving it in the database
+      const hashPassword = bcrypt.hashSync(newPassword.password, 8);
+      newPassword.password = hashPassword;
 
-    // if there is no user, send back an error
-    if (!user) {
+      // update user credentials and remove the temporary link from database before saving
+      const updatedCredentials = {
+        password: newPassword.password,
+        reset_link: null,
+      };
+
+      await Services.updatePassword(user.id, updatedCredentials);
       res
-        .status(400)
-        .json({ message: "We could not find a match for this link" });
+        .status(200)
+        .json({ status: "success", message: "Password updated", user: user });
+      // } catch (error) {
+      //   console.log(error);
+      //   res.status(500).json({ status: "error", message: error.message });
+      // }
     }
-
-    // otherwise we need to hash the new password  before saving it in the database
-    const hashPassword = bcrypt.hashSync(newPassword.password, 8);
-    newPassword.password = hashPassword;
-
-    // update user credentials and remove the temporary link from database before saving
-    const updatedCredentials = {
-      password: newPassword.password,
-      reset_link: null,
-    };
-
-    await Services.updatePassword(user.id, updatedCredentials);
-    res.status(200).json({status: 'success', message: "Password updated", user: user });
-  } catch (error) {
-    res.status(500).json({status: 'error', message: error.message });
-  }
+  });
 });
 
 module.exports = router;
