@@ -1,16 +1,22 @@
 const LikeDislike = require("../models/likeDislike");
-const Users = require("../models/users");
+const Users = require("../models/user");
 
 module.exports = class LikeDislikeService {
   async createLikeAndDislike(likeDislike) {
     console.log(likeDislike, "likeDislike service");
-    const user = await LikeDislike.query().findOne({ user_id: likeDislike.user_id });
+    const user = await LikeDislike.query().findOne({
+      user_id: likeDislike.user_id,
+    });
     console.log(user, "user, service hai bhai");
     if (user == undefined) {
       return await LikeDislike.query().insertGraph(likeDislike);
     }
     return await LikeDislike.query()
-      .update({ user_id: likeDislike.user_id, like: likeDislike.like, dislike: likeDislike.dislike })
+      .update({
+        user_id: likeDislike.user_id,
+        like: likeDislike.like,
+        dislike: likeDislike.dislike,
+      })
       .where({ user_id: like.user_id });
   }
 
@@ -46,14 +52,14 @@ module.exports = class LikeDislikeService {
       .where("like", "true")
       .withGraphFetched("users");
     // console.log(likes, likes[0].users.password, "service likes")
-      return likes;
+    return likes;
   }
 
   async findAllDislikes(dislike) {
     // return await LikeDislike.query(dislike).where({ dislike: "true" });
     const dislikes = await LikeDislike.query()
-    .where("dislike", "true")
-    .withGraphFetched("users");
+      .where("dislike", "true")
+      .withGraphFetched("users");
     return dislikes;
   }
 };

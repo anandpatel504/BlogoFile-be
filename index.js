@@ -16,14 +16,18 @@ const pool = new Pool({
 const userRouter = require("./routes/users");
 const blogRouter = require("./routes/blogs");
 const likeDislikeRouter = require("./routes/likeDislike");
+const zomato = require("./routes/zomato");
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(morgan("dev"));
+
+//Routes
 app.use(userRouter);
 app.use(blogRouter);
 app.use(likeDislikeRouter);
+app.use(zomato);
 
 // error
 app.use(function (req, res, next) {

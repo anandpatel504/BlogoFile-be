@@ -11,19 +11,27 @@
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "html-webpack-plugin": "^5.5.0",
     "http-errors": "^1.8.0",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.12",
     "knex-migrate": "^1.7.4",
     "morgan": "^1.10.0",
+    "mustache": "^4.2.0",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.7.2",
     "nodemon": "^2.0.6",
     "objection": "^2.2.3",
+    "objection-db-errors": "^1.1.2",
     "objection-unique": "^1.2.1",
-    "pg": "^8.7.1"
+    "pg": "^8.7.1",
+    "underscore": "^1.13.2",
+    "zomato": "^1.1.0"
   }
 }
