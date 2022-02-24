@@ -87,7 +87,7 @@ router.post("/forgot-password", async (req, res) => {
         expiresIn: "10m",
       });
       // update resetLink property to be the temporary token and then send email
-      await Services.update(user.id, { resetLink });
+      // await Services.update(user.id, { resetLink });
       await Services.sendEmail(user, resetLink);
       res.status(200).json({ message: "Check your email", user: user });
     }
