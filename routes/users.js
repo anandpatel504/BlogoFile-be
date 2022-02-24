@@ -89,10 +89,10 @@ router.post("/forgot-password", async (req, res) => {
       // update resetLink property to be the temporary token and then send email
       // await Services.update(user.id, { resetLink });
       await Services.sendEmail(user, resetLink);
-      res.status(200).json({ message: "Check your email", user: user });
+      res.status(200).json({status: 'success', message: "Check your email", user: user });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({status: 'error', message: error.message });
   }
 });
 
@@ -133,9 +133,9 @@ router.patch("/reset-password/:token", async (req, res) => {
     };
 
     await Services.updatePassword(user.id, updatedCredentials);
-    res.status(200).json({ message: "Password updated", user: user });
+    res.status(200).json({status: 'success', message: "Password updated", user: user });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({status: 'error', message: error.message });
   }
 });
 
