@@ -10,7 +10,7 @@ module.exports = class Blogs extends Model {
       id: Joi.number().integer().greater(0),
       title: Joi.string().required(),
       description: Joi.string(),
-      author: Joi.string(),
+      user_id: Joi.integer(),
       created_at: Joi.date(),
       updated_at: Joi.date(),
     });

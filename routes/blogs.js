@@ -7,9 +7,11 @@ const { authenticateToken } = require('../auth/strategies/jwt');
 
 // create blog
 router.post('/createBlog', authenticateToken, async(req, res) => {
+    req.body.user_id = req.decode.id
+    console.log(req.body);
     await Services.createBlog(req.body).then((data) => {
-        console.log(data, "data");
-        res.send(data);
+        console.log(req.decode, "data");
+        res.send({'status': 'success', 'data':data});
     }).catch((err) => {
         res.send(err);
     })
