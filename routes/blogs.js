@@ -41,9 +41,9 @@ router.delete("/deleteBlog/:id", authenticateToken, async (req, res) => {
   const blogId = req.params.id;
   await Services.deleteById(blogId).then((data) => {
     if (data > 0) {
-      res.send({ success: `blog Id ${blogId} deleted` });
+      res.send({ status: 'success' });
     } else {
-      res.send({ sorry: `blog Id ${blogId} not found!` });
+      res.send({ status: 'error', "message": "Invalid blog id"});
     }
   });
 });
