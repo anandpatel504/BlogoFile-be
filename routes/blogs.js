@@ -1,7 +1,23 @@
 const express = require("express");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
+const fileUpload = require("express-fileupload");
 const BlogService = require("../services/blogs");
 const Services = new BlogService();
+
+// cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.api_key,
+  api_secret: process.env.api_secret,
+});
+
+router.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
 
 const { authenticateToken } = require("../auth/strategies/jwt");
 
@@ -17,6 +33,33 @@ router.post("/createBlog", authenticateToken, async (req, res) => {
     })
     .catch((err) => {
       res.send(err);
+    });
+});
+
+// image upload API
+router.post("/image-upload", (request, response) => {
+  if (!request.files) {
+    return res.status(400).send("No files were uploaded.");
+  }
+  // collected image from a user
+  const data = request.files.myimage.tempFilePath;
+  // console.log(request.files.myimage.tempFilePath);
+
+  // upload image here
+  cloudinary.uploader
+    .upload(data)
+    .then((result) => {
+      console.log(result, "result...");
+      response.status(200).send({
+        message: "success",
+        result,
+      });
+    })
+    .catch((error) => {
+      response.status(500).send({
+        message: "failure",
+        error,
+      });
     });
 });
 
