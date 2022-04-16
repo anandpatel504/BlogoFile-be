@@ -78,7 +78,7 @@ router.get("/photos", authenticateToken, async (req, res) => {
         d.c_user_id = req.decode.id;
         return d;
       });
-      res.send(data);
+      res.send({'status': "success", 'data': data});
     })
     .catch((err) => {
       res.send(err);
