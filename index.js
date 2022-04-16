@@ -17,6 +17,7 @@ const userRouter = require("./routes/users");
 const blogRouter = require("./routes/blogs");
 const likeDislikeRouter = require("./routes/likeDislike");
 const zomato = require("./routes/zomato");
+const gallery = require("./routes/gallery");
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -28,9 +29,11 @@ app.use(userRouter);
 app.use(blogRouter);
 app.use(likeDislikeRouter);
 app.use(zomato);
+// app.use(gallery);
 
 // error
 app.use(function (req, res, next) {
+  console.log(req.user, "index user batao\n");
   if (!req.user) return next(createError(401, "Please login!"));
   next();
 });
