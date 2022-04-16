@@ -11,17 +11,24 @@ function generateAccessToken(userInfo) {
 
 function authenticateToken(req, res, next) {
   // Gather the jwt access token from the request header
-  console.log(req.query, "slkjdflkj");
   var authHeader = req.query.token || req.body.token || req.headers.cookie;
   var token = authHeader && authHeader.split(" ")[0];
   if (token == undefined) {
     res.send({ error: "token not found!" });
   }
   try {
-    token = token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    req.decode = decoded;
-    next(); // pass the execution off to whatever request the client intended
+    if (token.startsWith("key=")) {
+      token = token.slice(4, token.length);
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      req.decode = decoded;
+      next(); // pass the execution off to whatever request the client intended
+    } else {
+      token = token;
+      console.log(token, "token222\n");
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      req.decode = decoded;
+      next(); // pass the execution off to whatever request the client intended
+    }
   } catch (error) {
     console.log(error, "This is token error, please check it");
     req.Error = error.message;
