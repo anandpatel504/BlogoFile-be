@@ -26,9 +26,9 @@ router.put("/updateBlog/:id", authenticateToken, async (req, res) => {
   await Services.updateById(blogId, req.body)
     .then((data) => {
       if (data > 0) {
-        res.send({ success: `blog Id ${blogId} updated` });
+        res.send({ status: `success` });
       } else {
-        res.send({ sorry: `blog Id ${blogId} not found!` });
+        res.send({ status: `error` });
       }
     })
     .catch((err) => {
