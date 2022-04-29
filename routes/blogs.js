@@ -27,6 +27,7 @@ const { authenticateToken } = require("../auth/strategies/jwt");
 router.post("/createBlog", authenticateToken, async (req, res) => {
   console.log(req.decode);
   req.body.user_id = req.decode.id;
+  req.body.author = req.decode.name;
   console.log(req.body, "mai hu be");
   await Services.createBlog(req.body)
     .then((data) => {
@@ -78,7 +79,7 @@ router.get("/photos", authenticateToken, async (req, res) => {
         d.c_user_id = req.decode.id;
         return d;
       });
-      res.send({'status': "success", 'data': data});
+      res.send({ status: "success", data: data });
     })
     .catch((err) => {
       res.send(err);
@@ -106,24 +107,22 @@ router.delete("/deleteBlog/:id", authenticateToken, async (req, res) => {
   const blogId = req.params.id;
   await Services.deleteById(blogId).then((data) => {
     if (data > 0) {
-      res.send({ status: 'success' });
+      res.send({ status: "success" });
     } else {
-      res.send({ status: 'error', "message": "Invalid blog id"});
+      res.send({ status: "error", message: "Invalid blog id" });
     }
   });
 });
 
 // get all blogs
 router.get("/getAll", authenticateToken, async (req, res) => {
-  console.log(req.decode.id, "blog table");
   await Services.findAll()
     .then((data) => {
       data = data.map((d) => {
         d.c_user_id = req.decode.id;
         return d;
       });
-      console.log(data);
-      res.send(data);
+      res.send({ status: "success", data: data });
     })
     .catch((err) => {
       res.send(err);
@@ -136,6 +135,26 @@ router.get("/getBlog/:id", authenticateToken, async (req, res) => {
   await Services.findById(blogId)
     .then((data) => {
       res.send(data);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+});
+
+// do like&dislike
+router.post("/imagesLikeDislike", authenticateToken, async (req, res) => {
+  const userId = req.decode.id;
+  const like = req.body.like;
+  const image_id = req.body.image_id;
+  const userData = {
+    user_id: userId,
+    image_id: image_id,
+    like: like,
+  };
+  await GServices.imageLikeAndDislike(userData)
+    .then((data) => {
+      console.log(data, "data route\n");
+      res.send({ status: "success", data: data });
     })
     .catch((err) => {
       res.send(err);

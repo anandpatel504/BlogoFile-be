@@ -14,6 +14,34 @@ module.exports = class Gallery extends Model {
       updated_at: Joi.date(),
     });
   }
+
+  static get relationMappings() {
+    const User = require("./user");
+    return {
+      users: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: "gallery.user_id",
+          to: "users.id",
+        },
+      },
+    };
+  }
+
+  // static get relationMappings() {
+  //   const ImageLikeDislike = require("./imagesLikeDislike");
+  //   return {
+  //     imageLikeDislike: {
+  //       relation: Model.BelongsToOneRelation,
+  //       modelClass: ImageLikeDislike,
+  //       join: {
+  //         from: "gallery.user_id",
+  //         to: "gallery_image_like_dislike.user_id",
+  //       },
+  //     },
+  //   };
+  // }
   $beforeInsert() {
     const now = new Date();
     this.created_at = now;
