@@ -15,7 +15,7 @@ const pool = new Pool({
 
 const userRouter = require("./routes/users");
 const blogRouter = require("./routes/blogs");
-const likeDislikeRouter = require("./routes/likeDislike");
+const likeDislikeRouter = require("./routes/blogsLikeDislike");
 const zomato = require("./routes/zomato");
 const gallery = require("./routes/gallery");
 
