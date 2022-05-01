@@ -9,10 +9,33 @@ module.exports = class GalleryService {
   }
 
   async findAll(userId, photos) {
-    return await Gallery.query(photos).withGraphFetched(
-      // "users",
-      "gallery_image_like_dislike"
-    );
+    try {
+      const galleryData = await Gallery.query(photos).withGraphFetched("users");
+      const galleryImageData = await ImagesLikeDislike.query(photos).where(
+        "user_id",
+        userId
+      );
+      console.log(galleryImageData, "galleryImageData service data\n\n");
+      return galleryData;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async deleteImageById(imageId) {
+    let deleted;
+    try {
+      let image_id = await ImagesLikeDislike.query().findById(imageId);
+      if (image_id !== undefined) {
+        deleted = await ImagesLikeDislike.query()
+          .delete()
+          .where("image_id", imageId);
+      }
+      deleted = await Gallery.query().deleteById(imageId);
+      return deleted;
+    } catch (err) {
+      return err;
+    }
   }
 
   async imageLikeAndDislike(galleryData) {

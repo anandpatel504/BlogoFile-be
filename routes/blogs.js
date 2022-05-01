@@ -161,4 +161,18 @@ router.post("/imagesLikeDislike", authenticateToken, async (req, res) => {
     });
 });
 
+// delete gallery image
+router.delete("/photo/:id", authenticateToken, async (req, res) => {
+  const imageId = req.params.id;
+  await GServices.deleteImageById(imageId).then((data) => {
+    if (data > 0) {
+      res.send({ status: "success" });
+    } else {
+      res.send({ status: "error", message: "Invalid image id" });
+    }
+  });
+});
+
+// get the list of gallery images likes and dislikes
+
 module.exports = router;
