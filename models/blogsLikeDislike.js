@@ -16,37 +16,6 @@ module.exports = class BlogsLikeDislike extends Model {
     });
   }
 
-  static get relationMappings() {
-    /* eslint-disable global-require */
-    const Blogs = require("./blogs");
-    /* eslint-enable global-require */
-
-    return {
-      blogs: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Blogs,
-        join: {
-          from: "blogs_like_dislike.blog_id",
-          to: "blogs.id",
-        },
-      },
-    };
-  }
-
-  // static get relationMappings() {
-  //   const Blogs = require("./blogs");
-  //   return {
-  //     blogs: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Blogs,
-  //       join: {
-  //         from: "blogs_like_dislike.blog_id",
-  //         to: "blogs.id",
-  //       },
-  //     },
-  //   };
-  // }
-
   $beforeInsert() {
     const now = new Date();
     this.created_at = now;

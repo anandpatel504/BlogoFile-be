@@ -17,31 +17,27 @@ module.exports = class Gallery extends Model {
 
   static get relationMappings() {
     const User = require("./user");
+    const GalleryImageLikeDislike = require("./imagesLikeDislike");
     return {
       users: {
-        relation: Model.BelongsToOneRelation,
+        relation: Model.HasManyRelation,
         modelClass: User,
         join: {
           from: "gallery.user_id",
           to: "users.id",
         },
       },
+      galleryImageLikeDislike: {
+        relation: Model.HasManyRelation,
+        modelClass: GalleryImageLikeDislike,
+        join: {
+          from: "gallery.id",
+          to: "gallery_image_like_dislike.image_id",
+        },
+      },
     };
   }
 
-  // static get relationMappings() {
-  //   const ImageLikeDislike = require("./imagesLikeDislike");
-  //   return {
-  //     imageLikeDislike: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: ImageLikeDislike,
-  //       join: {
-  //         from: "gallery.user_id",
-  //         to: "gallery_image_like_dislike.user_id",
-  //       },
-  //     },
-  //   };
-  // }
   $beforeInsert() {
     const now = new Date();
     this.created_at = now;

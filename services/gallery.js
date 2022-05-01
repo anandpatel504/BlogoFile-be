@@ -4,18 +4,14 @@ const ImagesLikeDislike = require("../models/imagesLikeDislike");
 
 module.exports = class GalleryService {
   async uploadPhoto(userId, url) {
-    console.log(userId, url, "service hai bhai\n");
     return await Gallery.query().insertGraph({ user_id: userId, url: url });
   }
 
   async findAll(userId, photos) {
     try {
-      const galleryData = await Gallery.query(photos).withGraphFetched("users");
-      const galleryImageData = await ImagesLikeDislike.query(photos).where(
-        "user_id",
-        userId
+      const galleryData = await Gallery.query(photos).withGraphFetched(
+        "[users, galleryImageLikeDislike]"
       );
-      console.log(galleryImageData, "galleryImageData service data\n\n");
       return galleryData;
     } catch (err) {
       return err;

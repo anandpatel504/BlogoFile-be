@@ -173,6 +173,4 @@ router.delete("/photo/:id", authenticateToken, async (req, res) => {
   });
 });
 
-// get the list of gallery images likes and dislikes
-
 module.exports = router;
