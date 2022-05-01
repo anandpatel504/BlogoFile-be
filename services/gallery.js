@@ -21,12 +21,9 @@ module.exports = class GalleryService {
   async deleteImageById(imageId) {
     let deleted;
     try {
-      let image_id = await ImagesLikeDislike.query().findById(imageId);
-      if (image_id !== undefined) {
-        deleted = await ImagesLikeDislike.query()
-          .delete()
-          .where("image_id", imageId);
-      }
+      deleted = await ImagesLikeDislike.query()
+        .delete()
+        .where("image_id", imageId);
       deleted = await Gallery.query().deleteById(imageId);
       return deleted;
     } catch (err) {

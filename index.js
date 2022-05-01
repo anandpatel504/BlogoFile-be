@@ -32,11 +32,11 @@ app.use(zomato);
 // app.use(gallery);
 
 // error
-app.use(function (req, res, next) {
-  console.log(req.user, "index user batao\n");
-  if (!req.user) return next(createError(401, "Please login!"));
-  next();
-});
+// app.use(function (req, res, next) {
+//   console.log(req.user, "index user batao\n");
+//   if (!req.user) return next(createError(401, "Please login!"));
+//   next();
+// });
 
 // PORT
 const PORT = process.env.PORT || 2023;

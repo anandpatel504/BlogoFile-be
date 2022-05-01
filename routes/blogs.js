@@ -29,14 +29,22 @@ router.post("/createBlog", authenticateToken, async (req, res) => {
   req.body.user_id = req.decode.id;
   req.body.author = req.decode.name;
   console.log(req.body, "mai hu be");
-  await Services.createBlog(req.body)
-    .then((data) => {
-      console.log(req.decode, "data");
-      res.send({ status: "success", data: data });
-    })
-    .catch((err) => {
-      res.send(err);
-    });
+  const data = req.files.myimage.tempFilePath;
+  // console.log(req.files.myimage.tempFilePath);
+
+  // upload image here
+  cloudinary.uploader.upload(data).then(async (result) => {
+    const url = result.url;
+    req.body.url = url;
+    await Services.createBlog(req.body)
+      .then((data) => {
+        console.log(req.decode, "data");
+        res.send({ status: "success", data: data });
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  });
 });
 
 // image upload API
@@ -89,17 +97,28 @@ router.get("/photos", authenticateToken, async (req, res) => {
 // update blog
 router.put("/updateBlog/:id", authenticateToken, async (req, res) => {
   const blogId = req.params.id;
-  await Services.updateById(blogId, req.body)
-    .then((data) => {
-      if (data > 0) {
-        res.send({ status: `success` });
-      } else {
-        res.send({ status: `error` });
-      }
-    })
-    .catch((err) => {
-      res.send(err);
-    });
+  // collected image from a user
+  const data = req.files.myimage.tempFilePath;
+  // console.log(req.files.myimage.tempFilePath);
+
+  // upload image here
+  cloudinary.uploader.upload(data).then(async (result) => {
+    const url = result.url;
+    req.body.url=url
+
+    await Services.updateById(blogId, req.body)
+      .then((data) => {
+        if (data > 0) {
+          res.send({ status: `success` });
+        } else {
+          res.send({ status: `error` });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.send(err);
+      });
+  });
 });
 
 // delete blog

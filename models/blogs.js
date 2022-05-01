@@ -11,6 +11,7 @@ module.exports = class Blogs extends Model {
       user_id: Joi.integer(),
       title: Joi.text().required(),
       description: Joi.text(),
+      url: Joi.text(),
       author: Joi.text(),
       created_at: Joi.date(),
       updated_at: Joi.date(),
