@@ -6,7 +6,7 @@ const Services = new BlogsLikeDislikeService();
 const { authenticateToken } = require("../auth/strategies/jwt");
 
 // do like&dislike
-router.post("/likeDislike", authenticateToken, async (req, res) => {
+router.post("/blogLikeDislike", authenticateToken, async (req, res) => {
   const userId = req.decode.id;
   const like = req.body.like;
   const blog_id = req.body.blog_id;
