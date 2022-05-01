@@ -15,7 +15,14 @@ module.exports = class BlogService {
   }
 
   async findAll(txn) {
-    return await Blogs.query(txn).withGraphFetched("blogs");
+    try {
+      const BlogsData = await Blogs.query(txn);
+      // .withGraphFetched("blogs");
+      console.log(BlogsData, "BlogsData");
+      return BlogsData;
+    } catch (err) {
+      return err;
+    }
   }
 
   async findById(blogId) {
