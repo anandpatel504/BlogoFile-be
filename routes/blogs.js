@@ -103,7 +103,7 @@ router.put("/updateBlog/:id", authenticateToken, async (req, res) => {
 });
 
 // delete blog
-router.delete("/deleteBlog/:id", authenticateToken, async (req, res) => {
+router.delete("/blog/:id", authenticateToken, async (req, res) => {
   const blogId = req.params.id;
   await Services.deleteById(blogId).then((data) => {
     if (data > 0) {
@@ -115,7 +115,7 @@ router.delete("/deleteBlog/:id", authenticateToken, async (req, res) => {
 });
 
 // get all blogs
-router.get("/getAll", authenticateToken, async (req, res) => {
+router.get("/blogs", authenticateToken, async (req, res) => {
   await Services.findAll()
     .then((data) => {
       data = data.map((d) => {
